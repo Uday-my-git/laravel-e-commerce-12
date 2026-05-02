@@ -1,0 +1,112 @@
+php artisan config:clear
+php artisan optimize:clear
+php artisan cache:clear
+php artisan route:clear
+php artisan view:clear
+
+php artisan key:generate
+
+
+Terminal 1 (already running):-  stripe listen --forward-to http://localhost:8000/api/webhook-stripe
+Terminal 2:-  stripe trigger checkout.session.completed / stripe trigger payment_intent.succeeded (payment intende)
+
+Payment system architecture:-
+
+Order Created
+   ↓
+Stripe Checkout Session Created (with metadata)
+   ↓
+User Pays
+   ↓
+Stripe Webhook Fires
+   ↓
+checkout.session.completed
+   ↓
+metadata.order_id read
+   ↓
+Order found
+   ↓
+   ↓
+DB updated
+
+In local development: every time you want webhooks to work below this command.
+   stripe listen --forward-to 127.0.0.1:8000/api/stripe/webhook
+   stripe listen --forward-to 127.0.0.1:8000/stripe/webhook (Traits use for web.app route)
+   
+   Authorize.net Login Id:- UdaymyAuthorizegit99
+   Password:- UdaymyAuthorizegit
+
+Your Stripe system now works like this:
+Customer clicks Pay
+      │
+      ▼
+JS submitCheckoutForm()
+      │
+      ▼
+Laravel creates order
+      │
+      ▼
+Laravel creates PaymentIntent
+      │
+      ▼
+client_secret returned
+      │
+      ▼
+Stripe.confirmCardPayment()
+      │
+      ▼
+Stripe processes card
+      │
+      ▼
+Stripe webhook → payment_intent.succeeded
+      │
+      ▼
+Laravel handlePaymentSuccess()
+      │
+      ▼
+Order marked PAID
+
+
+/* 
+   ------------ Authorize.net:- Accept.js Flow (Correct) ------------- 
+*/
+
+For testing purpose, this only run on ngrox. Step to follow how to start authorize.net payment gateway with this
+
+STEP 1: Start Laravel
+   http://127.0.0.1:8000
+
+STEP 2: Start ngrok (in NEW terminal)
+   ngrok http 8000
+
+STEP 4: Copy fresh URL
+   https://a1b2c3.ngrok.io
+
+After then run command show in terminal of Forwading show   https://wrongful-hyperbarbarous-catharine.ngrok-free.dev
+
+Your flow now becomes:
+
+User selects Authorize.Net
+        ↓
+Enter card
+        ↓
+authorizePayment()
+        ↓
+Accept.js tokenizes card
+        ↓
+opaqueData returned
+        ↓
+submitCheckoutForm(opaqueData)
+        ↓
+CartController
+        ↓
+PaymentController@authorizeCharge
+        ↓
+Authorize.Net API
+        ↓
+Payment success
+
+Authorize Card Detail:-
+Card Number: 4111111111111111
+Exp: 12/2030
+CVV: 123

@@ -175,7 +175,7 @@
                            </div>
                         </div>                        
                         <div class="card-body text-center mt-3">
-                           <a class="h6 link" href="product.php">{{ $featuredProduct->title }}</a>
+                           <a class="h6 link" href="{{ route('front-end.product', $featuredProduct->slug) }}">{{ $featuredProduct->title }}</a>
                            <div class="price mt-2">
                               <span class="h5"><strong>R.s.{{ $featuredProduct->price }}</strong></span>
                               <span class="h6 text-underline"><del>R.s.{{ $featuredProduct->cpompare_price }}</del></span>
@@ -243,7 +243,7 @@
                         </div>
                      </div>                        
                      <div class="card-body text-center mt-3">
-                        <a class="h6 link" href="product.php">{{ $latestProduct->title }}</a>
+                        <a class="h6 link" href="{{ route('front-end.product', $latestProduct->slug) }}">{{ $latestProduct->title }}</a>
                         <div class="price mt-2">
                            <span class="h5"><strong>R.s.{{ $latestProduct->price }}</strong></span>
                            <span class="h6 text-underline"><del>R.s.{{ $latestProduct->compare_price }}</del></span>
